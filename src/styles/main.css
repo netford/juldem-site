@@ -554,7 +554,6 @@
  }
  
  /* Эффекты при наведении */
-/* Тестовая строка - можно убрать */
 
  .hover-lift {
    transition: var(--transition-base);

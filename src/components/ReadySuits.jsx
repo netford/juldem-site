@@ -1,41 +1,39 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Badge, ShoppingBag, Bell, Eye } from 'lucide-react';
+import { ShoppingBag, Eye } from 'lucide-react';
 
 function ReadySuits() {
   const [activeFilter, setActiveFilter] = useState('all');
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
 
-  // Демо-данные
   const suits = [
     {
       id: 1,
       name: "Купальник 'Аврора'",
       category: "gymnastics",
       price: 15000,
-      size: "S-M",
+      height: "130-139 см.",
       description: "Гимнастический купальник с кристаллами Swarovski",
       images: ["/api/placeholder/400/500"],
       available: true,
-      tags: ['Новинка', 'Хит продаж']
+      tags: ['Новинка']
     },
     {
       id: 2,
       name: "Купальник 'Виктория'",
       category: "figure-skating",
       price: 17000,
-      size: "M",
+      height: "125-129 см.",
       description: "Купальник для фигурного катания с градиентом",
       images: ["/api/placeholder/400/500"],
-      available: true,
-      tags: ['Популярное']
+      available: true
     },
     {
       id: 3,
       name: "Купальник 'Лилия'",
       category: "gymnastics",
       price: 16000,
-      size: "S",
+      height: "до 124 см.",
       description: "Купальник с цветочным орнаментом",
       images: ["/api/placeholder/400/500"],
       available: false
@@ -45,7 +43,7 @@ function ReadySuits() {
       name: "Купальник 'Снежинка'",
       category: "figure-skating",
       price: 18500,
-      size: "S-M",
+      height: "140-154 см.",
       description: "Купальник для фигурного катания с узором из страз",
       images: ["/api/placeholder/400/500"],
       available: false
@@ -55,11 +53,10 @@ function ReadySuits() {
       name: "Купальник 'Феникс'",
       category: "acrobatics",
       price: 16500,
-      size: "M",
+      height: "от 155 см.",
       description: "Купальник для спортивной акробатики с эффектом омбре",
       images: ["/api/placeholder/400/500"],
-      available: true,
-      tags: ['Скидка 15%']
+      available: true
     }
   ];
 
@@ -94,8 +91,28 @@ function ReadySuits() {
 
   const filteredSuits = suits.filter(suit => {
     if (activeFilter === 'all') return true;
-    if (activeFilter === 'available') return suit.available;
     if (activeFilter === 'sold') return !suit.available;
+    
+    if (activeFilter.startsWith('height-')) {
+      if (!suit.available) return false;
+      
+      const heightRange = activeFilter.split('-')[1];
+      switch (heightRange) {
+        case '124':
+          return suit.height === 'до 124 см.';
+        case '129':
+          return suit.height === '125-129 см.';
+        case '139':
+          return suit.height === '130-139 см.';
+        case '154':
+          return suit.height === '140-154 см.';
+        case '155':
+          return suit.height === 'от 155 см.';
+        default:
+          return false;
+      }
+    }
+    
     return suit.category === activeFilter;
   });
 
@@ -254,6 +271,13 @@ function ReadySuits() {
           padding: 1.5rem;
           background: #1a1a1a;
           color: #fff;
+          height: 245px;
+          display: flex;
+          flex-direction: column;
+        }
+        
+        .suit-info {
+          flex-grow: 1;
         }
 
         .suit-title {
@@ -268,6 +292,12 @@ function ReadySuits() {
           margin-bottom: 1rem;
           font-size: 0.95rem;
           line-height: 1.5;
+          height: 3rem;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
         }
 
         .suit-details {
@@ -312,13 +342,13 @@ function ReadySuits() {
           background: var(--color-accent);
         }
 
-        .notify-btn {
-          background: #333;
-          color: #fff;
+        .order-btn {
+          background: #00e6ff;
+          color: #1a1a1a;
         }
 
-        .notify-btn:hover {
-          background: #444;
+        .order-btn:hover {
+          background: #00ccff;
         }
 
         @media (max-width: 768px) {
@@ -337,7 +367,6 @@ function ReadySuits() {
           }
         }
 
-        /* Стилизация стрелки для select */
         .filter-select {
           background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
           background-repeat: no-repeat;
@@ -358,8 +387,14 @@ function ReadySuits() {
           onChange={(e) => setActiveFilter(e.target.value)}
         >
           <option value="all">Все купальники</option>
-          <option value="available">В наличии</option>
           <option value="sold">Продано</option>
+          <optgroup label="В наличии">
+            <option value="height-124">до 124 см.</option>
+            <option value="height-129">125-129 см.</option>
+            <option value="height-139">130-139 см.</option>
+            <option value="height-154">140-154 см.</option>
+            <option value="height-155">от 155 см.</option>
+          </optgroup>
           <optgroup label="Категории">
             <option value="gymnastics">Художественная гимнастика</option>
             <option value="figure-skating">Фигурное катание</option>
@@ -393,13 +428,15 @@ function ReadySuits() {
             </div>
 
             <div className="suit-content">
-              <h3 className="suit-title">{suit.name}</h3>
-              <p className="suit-description">{suit.description}</p>
-              <div className="suit-details">
-                <span className="suit-size">Размер: {suit.size}</span>
-                <span className="suit-price">
-                  {suit.price.toLocaleString('ru-RU')} ₽
-                </span>
+              <div className="suit-info">
+                <h3 className="suit-title">{suit.name}</h3>
+                <p className="suit-description">{suit.description}</p>
+                <div className="suit-details">
+                  <span className="suit-size">Рост: {suit.height}</span>
+                  <span className="suit-price">
+                    {suit.price.toLocaleString('ru-RU')} ₽
+                  </span>
+                </div>
               </div>
 
               {suit.available ? (
@@ -408,9 +445,9 @@ function ReadySuits() {
                   Купить
                 </button>
               ) : (
-                <button className="suit-action-btn notify-btn">
-                  <Bell size={18} />
-                  Сообщить о поступлении
+                <button className="suit-action-btn order-btn">
+                  <ShoppingBag size={18} />
+                  Заказать
                 </button>
               )}
             </div>

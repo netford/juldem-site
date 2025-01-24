@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Menu, X, Phone } from 'lucide-react'
+import { logo } from '../assets/images'
 
 const Navbar = () => {
  const [isOpen, setIsOpen] = useState(false)
@@ -17,7 +18,7 @@ const Navbar = () => {
  const renderDesktopNav = () => (
    <div className="nav-container">
      <div className="nav-left">
-       <img src="/src/assets/images/logo.png" alt="JULDEM" className="logo" />
+       <img src={logo} alt="JULDEM" className="logo" />
      </div>
 
      <div className="nav-center">
@@ -45,7 +46,7 @@ const Navbar = () => {
    <>
      <div className="nav-container mobile">
        <div className="nav-left">
-         <img src="/src/assets/images/logo.png" alt="JULDEM" className="logo" />
+        <img src={logo} alt="JULDEM" className="logo" />
        </div>
 
        <div className="nav-center">
