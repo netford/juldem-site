@@ -1,4 +1,5 @@
 import React from 'react';
+import { logo } from '../assets/images';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -24,9 +25,8 @@ const Footer = () => {
         }
 
         .footer-logo {
-          font-size: 1.5rem;
-          font-weight: bold;
-          color: #fff;
+          height: 40px;
+          width: auto;
           margin-bottom: 1rem;
         }
 
@@ -88,7 +88,7 @@ const Footer = () => {
 
       <div className="container">
         <div className="footer-content">
-          <div className="footer-logo">JULDEM</div>
+          <img src={logo} alt="JULDEM" className="footer-logo" />
           
           <nav className="footer-links">
             <a href="#main" className="footer-link">Главная</a>
@@ -101,8 +101,9 @@ const Footer = () => {
 
           <div className="footer-info">
             <p>Индивидуальный пошив спортивных купальников</p>
-            <p>г. Москва, ул. Примерная, д. 1</p>
-            <p>Тел.: +7 (999) 999-99-99</p>
+            <p>г. Набережные Челны, б-р Кереселидзе, д. 2/99</p>
+            <p>Тел.: +7 (919) 685-33-12</p>
+            <p>Email: info@juldem.ru</p>
           </div>
 
           <div className="copyright">
