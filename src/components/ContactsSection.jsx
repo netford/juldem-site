@@ -6,57 +6,39 @@ const ContactsSection = () => {
     <section id="contacts" className="contacts-section">
       <style>{`
         .contacts-section {
-          position: relative;
-          min-height: 600px;
+          padding: 6rem 0;
           background: #1a1a1a;
+          color: #fff;
+          min-height: 100vh;
         }
 
-        .map-container {
-          position: absolute;
-          inset: 0;
-        }
-
-        .map-container iframe {
-          width: 100%;
-          height: 100%;
-          border: 0;
-          filter: grayscale(1) brightness(0.7);
-        }
-
-        .content-wrapper {
-          position: relative;
-          z-index: 2;
-          padding: 4rem 2rem;
-          background: linear-gradient(
-            to right,
-            rgba(26, 26, 26, 0.95) 0%,
-            rgba(26, 26, 26, 0.8) 40%,
-            rgba(26, 26, 26, 0.4) 100%
-          );
-          min-height: 600px;
-          display: flex;
-          align-items: center;
-        }
-
-        .container {
-          max-width: 1400px;
-          margin: 0 auto;
-          width: 100%;
-        }
-
-        .contacts-card {
-          max-width: 450px;
-          background: rgba(38, 38, 38, 0.95);
-          border-radius: 16px;
-          padding: 2.5rem;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(10px);
+        .section-header {
+          text-align: center;
+          margin-bottom: 4rem;
         }
 
         .section-title {
           font-size: clamp(2rem, 4vw, 2.5rem);
           color: #fff;
-          margin-bottom: 2rem;
+          margin-bottom: 1rem;
+        }
+
+        .contacts-wrapper {
+          display: grid;
+          grid-template-columns: 350px 3fr;
+          gap: 2rem;
+          height: 600px;
+          max-width: 1800px;
+          margin: 0 auto;
+          padding: 0 2rem;
+        }
+
+        .contacts-card {
+          background: #262626;
+          border: 1px solid #333;
+          border-radius: 16px;
+          padding: 2.5rem;
+          height: 100%;
         }
 
         .contacts-list {
@@ -128,18 +110,44 @@ const ContactsSection = () => {
           color: var(--color-primary);
         }
 
+        .map-container {
+          position: relative;
+          height: 100%;
+          border-radius: 16px;
+          overflow: hidden;
+          width: 100%;
+        }
+
+        .map-container iframe {
+          width: 100%;
+          height: 100%;
+          border: 0;
+        }
+
+        @media (max-width: 1200px) {
+          .contacts-wrapper {
+            grid-template-columns: 350px 2fr;
+          }
+        }
+
+        @media (max-width: 992px) {
+          .contacts-wrapper {
+            grid-template-columns: 1fr;
+            height: auto;
+            gap: 1.5rem;
+          }
+
+          .map-container {
+            height: 400px;
+          }
+        }
+
         @media (max-width: 768px) {
-          .content-wrapper {
-            padding: 2rem 1rem;
-            background: linear-gradient(
-              to bottom,
-              rgba(26, 26, 26, 0.95) 0%,
-              rgba(26, 26, 26, 0.8) 100%
-            );
+          .contacts-section {
+            padding: 4rem 0;
           }
 
           .contacts-card {
-            max-width: 100%;
             padding: 1.5rem;
           }
 
@@ -149,68 +157,70 @@ const ContactsSection = () => {
         }
       `}</style>
 
-      <div className="map-container">
-        <iframe 
-          src="https://yandex.ru/map-widget/v1/?um=constructor%3Ab696df2fc21545adbe50d3425866ebbea11fb5956ec7cf0467c5018b960509bc&amp;source=constructor" 
-          title="Карта расположения"
-        ></iframe>
+      <div className="section-header">
+        <h2 className="section-title">Контакты</h2>
       </div>
 
-      <div className="content-wrapper">
-        <div className="container">
-          <div className="contacts-card">
-            <h2 className="section-title">Контакты</h2>
-            <div className="contacts-list">
-              <div className="contact-item">
-                <div className="contact-icon">
-                  <Phone />
-                </div>
-                <div className="contact-info">
-                  <div className="contact-label">Телефон</div>
-                  <a href="tel:+7999999999" className="contact-link contact-value">
-                    +7 (999) 999-99-99
-                  </a>
+      <div className="contacts-wrapper">
+        <div className="contacts-card">
+          <div className="contacts-list">
+            <div className="contact-item">
+              <div className="contact-icon">
+                <Phone />
+              </div>
+              <div className="contact-info">
+                <div className="contact-label">Телефон</div>
+                <a href="tel:+7999999999" className="contact-link contact-value">
+                  +7 (999) 999-99-99
+                </a>
+              </div>
+            </div>
+
+            <div className="contact-item">
+              <div className="contact-icon">
+                <Mail />
+              </div>
+              <div className="contact-info">
+                <div className="contact-label">Email</div>
+                <a href="mailto:info@example.com" className="contact-link contact-value">
+                  info@example.com
+                </a>
+              </div>
+            </div>
+
+            <div className="contact-item">
+              <div className="contact-icon">
+                <MapPin />
+              </div>
+              <div className="contact-info">
+                <div className="contact-label">Адрес</div>
+                <div className="contact-value">
+                  г. Москва, ул. Примерная, д. 1
                 </div>
               </div>
+            </div>
 
-              <div className="contact-item">
-                <div className="contact-icon">
-                  <Mail />
-                </div>
-                <div className="contact-info">
-                  <div className="contact-label">Email</div>
-                  <a href="mailto:info@example.com" className="contact-link contact-value">
-                    info@example.com
-                  </a>
-                </div>
+            <div className="contact-item">
+              <div className="contact-icon">
+                <Clock />
               </div>
-
-              <div className="contact-item">
-                <div className="contact-icon">
-                  <MapPin />
-                </div>
-                <div className="contact-info">
-                  <div className="contact-label">Адрес</div>
-                  <div className="contact-value">
-                    г. Москва, ул. Примерная, д. 1
-                  </div>
-                </div>
-              </div>
-
-              <div className="contact-item">
-                <div className="contact-icon">
-                  <Clock />
-                </div>
-                <div className="contact-info">
-                  <div className="contact-label">Время работы</div>
-                  <div className="contact-value">
-                    Пн-Пт: 10:00 - 19:00<br />
-                    Сб: 11:00 - 17:00
-                  </div>
+              <div className="contact-info">
+                <div className="contact-label">Время работы</div>
+                <div className="contact-value">
+                  Пн-Пт: 10:00 - 19:00<br />
+                  Сб: 11:00 - 17:00
                 </div>
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="map-container">
+          <iframe 
+            src="https://yandex.ru/map-widget/v1/?um=constructor%3Ab696df2fc21545adbe50d3425866ebbea11fb5956ec7cf0467c5018b960509bc&amp;source=constructor" 
+            title="Карта расположения"
+            allowFullScreen
+          ></iframe>
         </div>
       </div>
     </section>
