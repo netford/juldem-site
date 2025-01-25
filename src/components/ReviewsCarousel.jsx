@@ -1,48 +1,40 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, Play, Star, Quote } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const ReviewsSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [transitionEnabled, setTransitionEnabled] = useState(true);
   const trackRef = useRef(null);
 
-  const originalReviews = [
+  const reviews = [
     {
       id: 1,
-      author: "Мария С.",
-      club: "Спартак",
-      date: "20.01.2024",
-      rating: 5,
-      text: "Прекрасное качество! Купальник идеально сидит и очень комфортный. Отдельное спасибо за оперативность изготовления."
+      author: "Наталья К.",
+      text: "Юля, спасибо за срочность - управились за 6 дней! Сразу видно профессионала - когда хотели добавить длинные свисающие ленты на купальник, объяснила, что по новым правилам в 2024 они запрещены на соревнованиях. Сэкономила время и деньги. Сидит идеально!"
     },
     {
       id: 2,
-      author: "Елена В.",
-      club: "Динамо",
-      date: "25.01.2024",
-      rating: 5,
-      text: "Очень довольна результатом! Все детали проработаны идеально, стразы надёжно закреплены. Дочь в восторге!"
+      author: "Светлана А.",
+      text: "Мастер от бога! За 5 дней сшила купальник для выступления. Особенно ценно, что учла все особенности - у дочки асимметрия плеч, но благодаря правильному крою этого совершенно не заметно. На первых же соревнованиях получили комплименты от судей за костюм."
     },
     {
       id: 3,
       author: "Ольга М.",
-      club: "Олимпия",
-      date: "28.01.2024",
-      rating: 5,
-      text: "Спасибо за профессиональный подход! Купальник получился именно таким, как мы хотели. Будем заказывать ещё!"
+      text: "Восторг! Горели со сроками, Юля сделала костюм за 8 дней. Когда я хотела блестящую отделку, объяснила что она даёт блики при софитах и может помешать судьям. Сделали матовый декор, смотрится шикарно. Отдельное спасибо за рекомендации по поводу эластичности ткани для поддержки спины при прогибах."
     },
     {
       id: 4,
+      author: "Марина В.",
+      text: "За три года сшили у Юли уже 4 купальника. Каждый раз как часы - ровно неделя от замеров до готового изделия. Понимает все нюансы: для скручиваний посоветовала особый крой рукавов, для прыжков - специальные швы, чтобы ничего не мешало. Всё-таки опыт мастера, который сам выступал - это бесценно."
+    },
+    {
+      id: 5,
       author: "Анна К.",
-      club: "Триумф",
-      date: "30.01.2024",
-      rating: 5,
-      text: "Отличная работа! Купальник сделан качественно, все швы аккуратные, сидит великолепно. Рекомендую!"
+      text: "Срочно понадобился купальник для показательных. Юля сделала за 4 дня! При этом качество идеальное, всё продумано до мелочей. Теперь только к ней."
     }
   ];
 
-  // Создаем массив с дублированными отзывами для бесконечной прокрутки
-  const reviews = [...originalReviews, ...originalReviews, ...originalReviews];
+  const extendedReviews = [...reviews, ...reviews, ...reviews];
 
   const moveToIndex = (index) => {
     setTransitionEnabled(true);
@@ -50,8 +42,7 @@ const ReviewsSection = () => {
   };
 
   const handleNext = () => {
-    if (activeIndex >= reviews.length - 3) {
-      // Если достигли конца, незаметно перемещаемся в начало
+    if (activeIndex >= extendedReviews.length - 3) {
       setTransitionEnabled(false);
       setActiveIndex(0);
       setTimeout(() => {
@@ -65,12 +56,11 @@ const ReviewsSection = () => {
 
   const handlePrev = () => {
     if (activeIndex <= 0) {
-      // Если достигли начала, незаметно перемещаемся в конец
       setTransitionEnabled(false);
-      setActiveIndex(reviews.length - 4);
+      setActiveIndex(extendedReviews.length - 4);
       setTimeout(() => {
         setTransitionEnabled(true);
-        setActiveIndex(reviews.length - 5);
+        setActiveIndex(extendedReviews.length - 5);
       }, 0);
     } else {
       moveToIndex(activeIndex - 1);
@@ -84,13 +74,14 @@ const ReviewsSection = () => {
           padding: 6rem 0;
           background: #1a1a1a;
           color: #fff;
+          overflow: hidden;
         }
 
         .container {
-          max-width: 1400px;
+          max-width: calc(400px * 3 + 4rem + 120px);
           margin: 0 auto;
-          padding: 0 2rem;
           position: relative;
+          padding: 0;
         }
 
         .section-header {
@@ -106,22 +97,26 @@ const ReviewsSection = () => {
 
         .carousel-container {
           position: relative;
-          margin: 0 80px;
+          margin: 0;
+          padding: 0 60px;
+          overflow: hidden;
         }
 
         .carousel {
           overflow: hidden;
+          width: calc(400px * 3 + 4rem);
+          margin: 0 auto;
         }
 
         .carousel-track {
           display: flex;
           gap: 2rem;
-          transition: ${transitionEnabled ? 'transform 0.5s ease-in-out' : 'none'};
-          transform: translateX(calc(-${activeIndex} * (350px + 2rem)));
+          transition: transform 0.5s ease-in-out;
+          transform: translateX(calc(-${activeIndex} * (400px + 2rem)));
         }
 
         .review-card {
-          flex: 0 0 350px;
+          flex: 0 0 400px;
           opacity: 1;
         }
 
@@ -129,9 +124,9 @@ const ReviewsSection = () => {
           background: #262626;
           border: 1px solid #333;
           border-radius: 16px;
-          overflow: hidden;
-          transition: all 0.3s ease;
+          padding: 2rem;
           height: 100%;
+          transition: all 0.3s ease;
         }
 
         .review-content:hover {
@@ -140,58 +135,8 @@ const ReviewsSection = () => {
           border-color: #444;
         }
 
-        .video-preview {
-          position: relative;
-          padding-bottom: 40%;
-          background: #000;
-          cursor: pointer;
-          overflow: hidden;
-          max-height: 180px;
-        }
-
-        .video-preview img {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          transition: transform 0.3s ease;
-        }
-
-        .video-preview:hover img {
-          transform: scale(1.05);
-        }
-
-        .play-button {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          width: 48px;
-          height: 48px;
-          background: var(--color-primary);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.3s ease;
-        }
-
-        .video-preview:hover .play-button {
-          transform: translate(-50%, -50%) scale(1.1);
-          background: var(--color-accent);
-        }
-
-        .review-info {
-          padding: 1.25rem;
-        }
-
         .review-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          margin-bottom: 0.75rem;
+          margin-bottom: 1rem;
         }
 
         .review-author {
@@ -200,31 +145,9 @@ const ReviewsSection = () => {
           color: #fff;
         }
 
-        .review-meta {
-          color: #ccc;
-          font-size: 0.9rem;
-        }
-
-        .rating {
-          display: flex;
-          gap: 0.25rem;
-          margin: 0.5rem 0;
-        }
-
-        .star {
-          color: #ffd700;
-        }
-
         .review-text {
           color: #ccc;
-          line-height: 1.5;
-          font-size: 0.9rem;
-          height: 4.5em;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: -webkit-box;
-          -webkit-line-clamp: 3;
-          -webkit-box-orient: vertical;
+          line-height: 1.6;
           margin: 0;
         }
 
@@ -252,16 +175,36 @@ const ReviewsSection = () => {
         }
 
         .prev-button {
-          left: -60px;
+          left: -24px;
         }
 
         .next-button {
-          right: -60px;
+          right: -24px;
         }
 
         @media (max-width: 1200px) {
-          .carousel-container {
-            margin: 0 60px;
+          .container {
+            max-width: 100%;
+          }
+          
+          .carousel {
+            width: calc(350px * 3 + 4rem);
+          }
+          
+          .review-card {
+            flex: 0 0 350px;
+          }
+          
+          .carousel-track {
+            transform: translateX(calc(-${activeIndex} * (350px + 2rem)));
+          }
+
+          .prev-button {
+            left: 0;
+          }
+
+          .next-button {
+            right: 0;
           }
         }
 
@@ -270,8 +213,12 @@ const ReviewsSection = () => {
             padding: 4rem 0;
           }
 
+          .carousel {
+            width: 300px;
+          }
+
           .carousel-container {
-            margin: 0 50px;
+            padding: 0 30px;
           }
 
           .review-card {
@@ -282,17 +229,13 @@ const ReviewsSection = () => {
             transform: translateX(calc(-${activeIndex} * (300px + 2rem)));
           }
 
+          .review-content {
+            padding: 1.5rem;
+          }
+
           .carousel-button {
             width: 40px;
             height: 40px;
-          }
-
-          .prev-button {
-            left: -45px;
-          }
-
-          .next-button {
-            right: -45px;
           }
         }
       `}</style>
@@ -312,35 +255,20 @@ const ReviewsSection = () => {
           </button>
 
           <div className="carousel">
-            <div ref={trackRef} className="carousel-track">
-              {reviews.map((review, index) => (
-                <div 
-                  key={`${review.id}-${index}`} 
-                  className="review-card"
-                >
+            <div 
+              ref={trackRef} 
+              className="carousel-track"
+              style={{ 
+                transition: transitionEnabled ? 'transform 0.5s ease-in-out' : 'none'
+              }}
+            >
+              {extendedReviews.map((review, index) => (
+                <div key={`${review.id}-${index}`} className="review-card">
                   <div className="review-content">
-                    <div className="video-preview">
-                      <img src="/api/placeholder/600/400" alt={`Отзыв от ${review.author}`} />
-                      <div className="play-button">
-                        <Play size={24} color="#fff" />
-                      </div>
+                    <div className="review-header">
+                      <div className="review-author">{review.author}</div>
                     </div>
-                    <div className="review-info">
-                      <div className="review-header">
-                        <div>
-                          <div className="review-author">{review.author}</div>
-                          <div className="review-meta">
-                            {review.club} • {review.date}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="rating">
-                        {[...Array(review.rating)].map((_, i) => (
-                          <Star key={i} size={16} className="star" fill="#ffd700" />
-                        ))}
-                      </div>
-                      <p className="review-text">{review.text}</p>
-                    </div>
+                    <p className="review-text">{review.text}</p>
                   </div>
                 </div>
               ))}
