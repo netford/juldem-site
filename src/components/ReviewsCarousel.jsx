@@ -74,14 +74,14 @@ const ReviewsSection = () => {
           padding: 6rem 0;
           background: #1a1a1a;
           color: #fff;
-          overflow: hidden;
+          position: relative;
         }
 
         .container {
-          max-width: calc(400px * 3 + 4rem + 120px);
-          margin: 0 auto;
           position: relative;
-          padding: 0;
+          max-width: 1400px;
+          margin: 0 auto;
+          padding: 0 60px;
         }
 
         .section-header {
@@ -97,15 +97,15 @@ const ReviewsSection = () => {
 
         .carousel-container {
           position: relative;
-          margin: 0;
+          margin: 0 -60px;
           padding: 0 60px;
-          overflow: hidden;
         }
 
         .carousel {
-          overflow: hidden;
-          width: calc(400px * 3 + 4rem);
+          width: 100%;
+          max-width: 1280px;
           margin: 0 auto;
+          overflow: hidden;
         }
 
         .carousel-track {
@@ -113,6 +113,7 @@ const ReviewsSection = () => {
           gap: 2rem;
           transition: transform 0.5s ease-in-out;
           transform: translateX(calc(-${activeIndex} * (400px + 2rem)));
+          width: fit-content;
         }
 
         .review-card {
@@ -167,30 +168,24 @@ const ReviewsSection = () => {
           justify-content: center;
           transition: all 0.3s ease;
           z-index: 10;
+          opacity: 0.7;
         }
 
         .carousel-button:hover {
           background: var(--color-accent);
           transform: translateY(-50%) scale(1.1);
+          opacity: 1;
         }
 
         .prev-button {
-          left: -24px;
+          left: 0;
         }
 
         .next-button {
-          right: -24px;
+          right: 0;
         }
 
-        @media (max-width: 1200px) {
-          .container {
-            max-width: 100%;
-          }
-          
-          .carousel {
-            width: calc(350px * 3 + 4rem);
-          }
-          
+        @media (max-width: 1400px) {
           .review-card {
             flex: 0 0 350px;
           }
@@ -198,13 +193,16 @@ const ReviewsSection = () => {
           .carousel-track {
             transform: translateX(calc(-${activeIndex} * (350px + 2rem)));
           }
+        }
 
-          .prev-button {
-            left: 0;
+        @media (max-width: 992px) {
+          .container {
+            padding: 0 40px;
           }
-
-          .next-button {
-            right: 0;
+          
+          .carousel-container {
+            margin: 0 -40px;
+            padding: 0 40px;
           }
         }
 
@@ -213,11 +211,12 @@ const ReviewsSection = () => {
             padding: 4rem 0;
           }
 
-          .carousel {
-            width: 300px;
+          .container {
+            padding: 0 30px;
           }
 
           .carousel-container {
+            margin: 0 -30px;
             padding: 0 30px;
           }
 
@@ -256,7 +255,7 @@ const ReviewsSection = () => {
 
           <div className="carousel">
             <div 
-              ref={trackRef} 
+              ref={trackRef}
               className="carousel-track"
               style={{ 
                 transition: transitionEnabled ? 'transform 0.5s ease-in-out' : 'none'
