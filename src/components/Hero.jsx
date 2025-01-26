@@ -38,9 +38,9 @@ const Hero = () => {
     <section ref={heroRef} id="main" className="hero">
       <style>{`
         .hero {
-          width: 100%;
-          height: 100vh;
           position: relative;
+          min-height: 100vh;
+          width: 100%;
           overflow: hidden;
           display: flex;
           align-items: center;
