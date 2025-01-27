@@ -232,6 +232,17 @@ const Navbar = () => {
               height: 40px;
             }
 
+            .mobile .phone-link {
+              white-space: nowrap;
+              font-size: 0.9rem;
+            }
+
+            @media (max-width: 360px) {
+              .mobile .phone-link {
+                font-size: 0.8rem;
+              }
+            }
+
             .nav-links.mobile {
               position: fixed;
               top: 80px;
