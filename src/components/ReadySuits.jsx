@@ -80,18 +80,11 @@ function ReadySuits() {
     return () => observer.disconnect();
   }, []);
 
-  const categories = {
-    all: 'Все купальники',
-    available: 'В наличии',
-    sold: 'Продано',
-    gymnastics: 'Художественная гимнастика',
-    'figure-skating': 'Фигурное катание',
-    acrobatics: 'Спортивная акробатика'
-  };
-
   const filteredSuits = suits.filter(suit => {
     if (activeFilter === 'all') return true;
+    if (activeFilter === 'available') return suit.available;
     if (activeFilter === 'sold') return !suit.available;
+    if (activeFilter === suit.category) return true;
     
     if (activeFilter.startsWith('height-')) {
       if (!suit.available) return false;
@@ -113,7 +106,7 @@ function ReadySuits() {
       }
     }
     
-    return suit.category === activeFilter;
+    return false;
   });
 
   return (
@@ -157,6 +150,11 @@ function ReadySuits() {
           -webkit-appearance: none;
           -moz-appearance: none;
           appearance: none;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 1rem center;
+          background-size: 1.5rem;
+          padding-right: 3rem;
         }
 
         .filter-select option {
@@ -229,6 +227,11 @@ function ReadySuits() {
           border-radius: 20px;
           font-size: 0.8rem;
           font-weight: 500;
+        }
+
+        .tag.sold {
+          background: #00e6ff;
+          color: #1a1a1a;
         }
 
         .suit-overlay {
@@ -307,6 +310,10 @@ function ReadySuits() {
           margin-bottom: 1.5rem;
         }
 
+        .suit-details.sold {
+          justify-content: flex-start;
+        }
+
         .suit-size {
           color: #ccc;
           font-size: 0.9rem;
@@ -345,10 +352,15 @@ function ReadySuits() {
         .order-btn {
           background: #00e6ff;
           color: #1a1a1a;
+          font-weight: 600;
         }
 
         .order-btn:hover {
           background: #00ccff;
+        }
+
+        .order-btn svg {
+          color: #1a1a1a;
         }
 
         @media (max-width: 768px) {
@@ -366,14 +378,6 @@ function ReadySuits() {
             padding: 1rem;
           }
         }
-
-        .filter-select {
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-          background-repeat: no-repeat;
-          background-position: right 1rem center;
-          background-size: 1.5rem;
-          padding-right: 3rem;
-        }
       `}</style>
 
       <div className="section-header">
@@ -387,8 +391,9 @@ function ReadySuits() {
           onChange={(e) => setActiveFilter(e.target.value)}
         >
           <option value="all">Все купальники</option>
+          <option value="available">В наличии</option>
           <option value="sold">Продано</option>
-          <optgroup label="В наличии">
+          <optgroup label="Рост">
             <option value="height-124">до 124 см.</option>
             <option value="height-129">125-129 см.</option>
             <option value="height-139">130-139 см.</option>
@@ -407,13 +412,14 @@ function ReadySuits() {
         {filteredSuits.map(suit => (
           <article key={suit.id} className="suit-card">
             <div className="suit-image-container">
-              {suit.tags && (
-                <div className="tags-container">
-                  {suit.tags.map((tag, index) => (
-                    <span key={index} className="tag">{tag}</span>
-                  ))}
-                </div>
-              )}
+              <div className="tags-container">
+                {suit.tags && suit.tags.map((tag, index) => (
+                  <span key={index} className="tag">{tag}</span>
+                ))}
+                {!suit.available && (
+                  <span className="tag sold">Продано</span>
+                )}
+              </div>
               <img 
                 src={suit.images[0]} 
                 alt={suit.name}
@@ -431,11 +437,13 @@ function ReadySuits() {
               <div className="suit-info">
                 <h3 className="suit-title">{suit.name}</h3>
                 <p className="suit-description">{suit.description}</p>
-                <div className="suit-details">
+                <div className={`suit-details ${!suit.available ? 'sold' : ''}`}>
                   <span className="suit-size">Рост: {suit.height}</span>
-                  <span className="suit-price">
-                    {suit.price.toLocaleString('ru-RU')} ₽
-                  </span>
+                  {suit.available && (
+                    <span className="suit-price">
+                      {suit.price.toLocaleString('ru-RU')} ₽
+                    </span>
+                  )}
                 </div>
               </div>
 
