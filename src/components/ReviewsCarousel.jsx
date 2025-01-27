@@ -3,7 +3,9 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const ReviewsSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [transitionEnabled, setTransitionEnabled] = useState(true);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const [isSwiping, setIsSwiping] = useState(false);
   const trackRef = useRef(null);
 
   const reviews = [
@@ -34,36 +36,49 @@ const ReviewsSection = () => {
     }
   ];
 
-  const extendedReviews = [...reviews, ...reviews, ...reviews];
+  const minSwipeDistance = 50;
 
-  const moveToIndex = (index) => {
-    setTransitionEnabled(true);
-    setActiveIndex(index);
+  const onTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+    setIsSwiping(true);
+  };
+
+  const onTouchMove = (e) => {
+    if (!isSwiping) return;
+    setTouchEnd(e.targetTouches[0].clientX);
+    e.preventDefault();
+  };
+
+  const onTouchEnd = () => {
+    if (!isSwiping) return;
+    
+    setIsSwiping(false);
+    
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    if (isLeftSwipe && activeIndex < reviews.length - 1) {
+      setActiveIndex(prev => prev + 1);
+    }
+    
+    if (isRightSwipe && activeIndex > 0) {
+      setActiveIndex(prev => prev - 1);
+    }
   };
 
   const handleNext = () => {
-    if (activeIndex >= extendedReviews.length - 3) {
-      setTransitionEnabled(false);
-      setActiveIndex(0);
-      setTimeout(() => {
-        setTransitionEnabled(true);
-        setActiveIndex(1);
-      }, 0);
-    } else {
-      moveToIndex(activeIndex + 1);
+    if (activeIndex < reviews.length - 1) {
+      setActiveIndex(prev => prev + 1);
     }
   };
 
   const handlePrev = () => {
-    if (activeIndex <= 0) {
-      setTransitionEnabled(false);
-      setActiveIndex(extendedReviews.length - 4);
-      setTimeout(() => {
-        setTransitionEnabled(true);
-        setActiveIndex(extendedReviews.length - 5);
-      }, 0);
-    } else {
-      moveToIndex(activeIndex - 1);
+    if (activeIndex > 0) {
+      setActiveIndex(prev => prev - 1);
     }
   };
 
@@ -75,13 +90,13 @@ const ReviewsSection = () => {
           background: #1a1a1a;
           color: #fff;
           position: relative;
+          overflow: hidden;
         }
 
         .container {
-          position: relative;
           max-width: 1400px;
           margin: 0 auto;
-          padding: 0 60px;
+          padding: 0 20px;
         }
 
         .section-header {
@@ -97,28 +112,25 @@ const ReviewsSection = () => {
 
         .carousel-container {
           position: relative;
-          margin: 0 -60px;
-          padding: 0 60px;
-        }
-
-        .carousel {
           width: 100%;
-          max-width: 1280px;
+          max-width: 600px;
           margin: 0 auto;
           overflow: hidden;
         }
 
         .carousel-track {
           display: flex;
-          gap: 2rem;
-          transition: transform 0.5s ease-in-out;
-          transform: translateX(calc(-${activeIndex} * (400px + 2rem)));
-          width: fit-content;
+          transition: transform 0.3s ease-out;
+          margin: 0 auto;
         }
 
         .review-card {
-          flex: 0 0 400px;
-          opacity: 1;
+          flex: 0 0 100%;
+          min-width: 100%;
+          padding: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
 
         .review-content {
@@ -126,18 +138,16 @@ const ReviewsSection = () => {
           border: 1px solid #333;
           border-radius: 16px;
           padding: 2rem;
-          height: 100%;
-          transition: all 0.3s ease;
-        }
-
-        .review-content:hover {
-          transform: translateY(-10px);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-          border-color: #444;
+          width: calc(100% - 40px);
+          max-width: 500px;
+          margin: 0 auto;
+          min-height: 300px;
+          display: flex;
+          flex-direction: column;
         }
 
         .review-header {
-          margin-bottom: 1rem;
+          margin-bottom: 1.5rem;
         }
 
         .review-author {
@@ -150,6 +160,7 @@ const ReviewsSection = () => {
           color: #ccc;
           line-height: 1.6;
           margin: 0;
+          flex: 1;
         }
 
         .carousel-button {
@@ -177,33 +188,22 @@ const ReviewsSection = () => {
           opacity: 1;
         }
 
+        .carousel-button:disabled {
+          background: #666;
+          cursor: not-allowed;
+          opacity: 0.5;
+        }
+
+        .carousel-button:disabled:hover {
+          transform: translateY(-50%);
+        }
+
         .prev-button {
-          left: 0;
+          left: 20px;
         }
 
         .next-button {
-          right: 0;
-        }
-
-        @media (max-width: 1400px) {
-          .review-card {
-            flex: 0 0 350px;
-          }
-          
-          .carousel-track {
-            transform: translateX(calc(-${activeIndex} * (350px + 2rem)));
-          }
-        }
-
-        @media (max-width: 992px) {
-          .container {
-            padding: 0 40px;
-          }
-          
-          .carousel-container {
-            margin: 0 -40px;
-            padding: 0 40px;
-          }
+          right: 20px;
         }
 
         @media (max-width: 768px) {
@@ -211,30 +211,30 @@ const ReviewsSection = () => {
             padding: 4rem 0;
           }
 
-          .container {
-            padding: 0 30px;
-          }
-
           .carousel-container {
-            margin: 0 -30px;
-            padding: 0 30px;
+            max-width: 100%;
           }
 
-          .review-card {
-            flex: 0 0 300px;
+          .carousel-button {
+            display: none;
           }
-
+          
           .carousel-track {
-            transform: translateX(calc(-${activeIndex} * (300px + 2rem)));
+            transform: translateX(-${activeIndex * 100}%);
+            touch-action: pan-y pinch-zoom;
           }
 
           .review-content {
             padding: 1.5rem;
+            width: calc(100% - 48px);
+            max-width: none;
+            min-height: 300px;
+            margin: 0 24px;
           }
 
-          .carousel-button {
-            width: 40px;
-            height: 40px;
+          .review-text {
+            font-size: 1rem;
+            line-height: 1.6;
           }
         }
       `}</style>
@@ -248,35 +248,38 @@ const ReviewsSection = () => {
           <button 
             className="carousel-button prev-button"
             onClick={handlePrev}
+            disabled={activeIndex === 0}
             aria-label="Предыдущий отзыв"
           >
             <ChevronLeft size={24} />
           </button>
 
-          <div className="carousel">
-            <div 
-              ref={trackRef}
-              className="carousel-track"
-              style={{ 
-                transition: transitionEnabled ? 'transform 0.5s ease-in-out' : 'none'
-              }}
-            >
-              {extendedReviews.map((review, index) => (
-                <div key={`${review.id}-${index}`} className="review-card">
-                  <div className="review-content">
-                    <div className="review-header">
-                      <div className="review-author">{review.author}</div>
-                    </div>
-                    <p className="review-text">{review.text}</p>
+          <div 
+            ref={trackRef}
+            className="carousel-track"
+            style={{
+              transform: `translateX(-${activeIndex * 100}%)`,
+            }}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+          >
+            {reviews.map((review) => (
+              <div key={review.id} className="review-card">
+                <div className="review-content">
+                  <div className="review-header">
+                    <div className="review-author">{review.author}</div>
                   </div>
+                  <p className="review-text">{review.text}</p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
 
           <button 
             className="carousel-button next-button"
             onClick={handleNext}
+            disabled={activeIndex === reviews.length - 1}
             aria-label="Следующий отзыв"
           >
             <ChevronRight size={24} />
