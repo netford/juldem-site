@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ShoppingBag, Eye } from 'lucide-react';
+import { ShoppingBag, Eye, MessageCircle, Phone } from 'lucide-react';
 
 function ReadySuits() {
   const [activeFilter, setActiveFilter] = useState('all');
@@ -109,6 +109,29 @@ function ReadySuits() {
     return false;
   });
 
+  const EmptyState = () => (
+    <div className="empty-state">
+      <div className="empty-state-content">
+        <p className="empty-state-text">
+          К сожалению, по вашим критериям не найдено ни одного подходящего купальника. 
+          Но не стоит расстраиваться! Мы с радостью изготовим для вас идеальный купальник 
+          по индивидуальному заказу в кратчайшие сроки. Свяжитесь с нами для консультации 
+          и обсуждения деталей.
+        </p>
+        <div className="empty-state-buttons">
+          <button className="hero-button primary">
+            <MessageCircle size={20} />
+            Получить консультацию
+          </button>
+          <button className="hero-button secondary">
+            <Phone size={20} />
+            Оформить заказ
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <section ref={sectionRef} id="our-works" className="ready-suits-section">
       <style>{`
@@ -119,6 +142,91 @@ function ReadySuits() {
           min-height: 100vh;
         }
 
+        .empty-state {
+          padding: 3rem 1rem;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 400px;
+        }
+
+        .empty-state-content {
+          max-width: 600px;
+          text-align: center;
+          background: rgba(255, 255, 255, 0.05);
+          padding: 3rem;
+          border-radius: 20px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .empty-state-text {
+          color: #ccc;
+          font-size: 1.1rem;
+          line-height: 1.6;
+          margin-bottom: 2rem;
+        }
+
+        .empty-state-buttons {
+          display: flex;
+          gap: 1rem;
+          justify-content: center;
+        }
+
+        .hero-button {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 1rem 2rem;
+          border-radius: 50px;
+          font-size: 1rem;
+          font-weight: 500;
+          transition: all 0.3s ease;
+          cursor: pointer;
+        }
+
+        .hero-button.primary {
+          background: var(--color-primary);
+          color: #fff;
+          border: none;
+        }
+
+        .hero-button.primary:hover {
+          background: var(--color-accent);
+          transform: translateY(-2px);
+        }
+
+        .hero-button.secondary {
+          background: transparent;
+          color: #fff;
+          border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .hero-button.secondary:hover {
+          border-color: #fff;
+          transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+          .empty-state {
+            padding: 2rem 1rem;
+          }
+
+          .empty-state-content {
+            padding: 2rem 1.5rem;
+          }
+
+          .empty-state-buttons {
+            flex-direction: column;
+          }
+
+          .hero-button {
+            width: 100%;
+            justify-content: center;
+          }
+        }
+
+        /* Остальные стили компонента остаются без изменений */
+        
         .section-header {
           text-align: center;
           margin-bottom: 4rem;
@@ -408,60 +516,64 @@ function ReadySuits() {
         </select>
       </div>
 
-      <div className="suits-grid">
-        {filteredSuits.map(suit => (
-          <article key={suit.id} className="suit-card">
-            <div className="suit-image-container">
-              <div className="tags-container">
-                {suit.tags && suit.tags.map((tag, index) => (
-                  <span key={index} className="tag">{tag}</span>
-                ))}
-                {!suit.available && (
-                  <span className="tag sold">Продано</span>
-                )}
-              </div>
-              <img 
-                src={suit.images[0]} 
-                alt={suit.name}
-                className="suit-image"
-              />
-              <div className="suit-overlay">
-                <button className="quick-view-btn">
-                  <Eye size={18} />
-                  Быстрый просмотр
-                </button>
-              </div>
-            </div>
-
-            <div className="suit-content">
-              <div className="suit-info">
-                <h3 className="suit-title">{suit.name}</h3>
-                <p className="suit-description">{suit.description}</p>
-                <div className={`suit-details ${!suit.available ? 'sold' : ''}`}>
-                  <span className="suit-size">Рост: {suit.height}</span>
-                  {suit.available && (
-                    <span className="suit-price">
-                      {suit.price.toLocaleString('ru-RU')} ₽
-                    </span>
+      {filteredSuits.length > 0 ? (
+        <div className="suits-grid">
+          {filteredSuits.map(suit => (
+            <article key={suit.id} className="suit-card">
+              <div className="suit-image-container">
+                <div className="tags-container">
+                  {suit.tags && suit.tags.map((tag, index) => (
+                    <span key={index} className="tag">{tag}</span>
+                  ))}
+                  {!suit.available && (
+                    <span className="tag sold">Продано</span>
                   )}
+                </div>
+                <img 
+                  src={suit.images[0]} 
+                  alt={suit.name}
+                  className="suit-image"
+                />
+                <div className="suit-overlay">
+                  <button className="quick-view-btn">
+                    <Eye size={18} />
+                    Быстрый просмотр
+                  </button>
                 </div>
               </div>
 
-              {suit.available ? (
-                <button className="suit-action-btn buy-btn">
-                  <ShoppingBag size={18} />
-                  Купить
-                </button>
-              ) : (
-                <button className="suit-action-btn order-btn">
-                  <ShoppingBag size={18} />
-                  Заказать
-                </button>
-              )}
-            </div>
-          </article>
-        ))}
-      </div>
+              <div className="suit-content">
+                <div className="suit-info">
+                  <h3 className="suit-title">{suit.name}</h3>
+                  <p className="suit-description">{suit.description}</p>
+                  <div className={`suit-details ${!suit.available ? 'sold' : ''}`}>
+                    <span className="suit-size">Рост: {suit.height}</span>
+                    {suit.available && (
+                      <span className="suit-price">
+                        {suit.price.toLocaleString('ru-RU')} ₽
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {suit.available ? (
+                  <button className="suit-action-btn buy-btn">
+                    <ShoppingBag size={18} />
+                    Купить
+                  </button>
+                ) : (
+                  <button className="suit-action-btn order-btn">
+                    <ShoppingBag size={18} />
+                    Заказать
+                  </button>
+                )}
+              </div>
+            </article>
+          ))}
+        </div>
+      ) : (
+        <EmptyState />
+      )}
     </section>
   );
 }
