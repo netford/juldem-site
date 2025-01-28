@@ -1,64 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ShoppingBag, Eye, MessageCircle, Phone } from 'lucide-react';
+import { ShoppingBag, Eye } from 'lucide-react';
+import snow_maiden from '../assets/images/suits/snow_maiden.jpg';
+
+const placeholderSVG = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='1067' viewBox='0 0 800 1067'%3E%3Crect width='800' height='1067' fill='%23262626'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23666' font-size='24'%3EНет фото%3C/text%3E%3C/svg%3E`;
 
 function ReadySuits() {
   const [activeFilter, setActiveFilter] = useState('all');
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
-
-  const suits = [
-    {
-      id: 1,
-      name: "Купальник 'Аврора'",
-      category: "gymnastics",
-      price: 15000,
-      height: "130-139 см.",
-      description: "Гимнастический купальник с кристаллами Swarovski",
-      images: ["/api/placeholder/400/500"],
-      available: true,
-      tags: ['Новинка']
-    },
-    {
-      id: 2,
-      name: "Купальник 'Виктория'",
-      category: "figure-skating",
-      price: 17000,
-      height: "125-129 см.",
-      description: "Купальник для фигурного катания с градиентом",
-      images: ["/api/placeholder/400/500"],
-      available: true
-    },
-    {
-      id: 3,
-      name: "Купальник 'Лилия'",
-      category: "gymnastics",
-      price: 16000,
-      height: "до 124 см.",
-      description: "Купальник с цветочным орнаментом",
-      images: ["/api/placeholder/400/500"],
-      available: false
-    },
-    {
-      id: 4,
-      name: "Купальник 'Снежинка'",
-      category: "figure-skating",
-      price: 18500,
-      height: "140-154 см.",
-      description: "Купальник для фигурного катания с узором из страз",
-      images: ["/api/placeholder/400/500"],
-      available: false
-    },
-    {
-      id: 5,
-      name: "Купальник 'Феникс'",
-      category: "acrobatics",
-      price: 16500,
-      height: "от 155 см.",
-      description: "Купальник для спортивной акробатики с эффектом омбре",
-      images: ["/api/placeholder/400/500"],
-      available: true
-    }
-  ];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -68,9 +17,7 @@ function ReadySuits() {
           observer.unobserve(entry.target);
         }
       },
-      {
-        threshold: 0.1
-      }
+      { threshold: 0.1 }
     );
 
     if (sectionRef.current) {
@@ -79,6 +26,55 @@ function ReadySuits() {
 
     return () => observer.disconnect();
   }, []);
+
+  const suits = [
+    {
+      id: 1,
+      name: "Купальник 'Снегурочка'",
+      category: "figure-skating",
+      price: 15000,
+      height: "130-139 см.",
+      images: [snow_maiden],
+      available: true,
+      tags: ['Новинка']
+    },
+    {
+      id: 2,
+      name: "Купальник 'Виктория'",
+      category: "figure-skating",
+      price: 17000,
+      height: "125-129 см.",
+      images: [placeholderSVG],
+      available: true
+    },
+    {
+      id: 3,
+      name: "Купальник 'Лилия'",
+      category: "gymnastics",
+      price: 16000,
+      height: "до 124 см.",
+      images: [placeholderSVG],
+      available: false
+    },
+    {
+      id: 4,
+      name: "Купальник 'Снежинка'",
+      category: "figure-skating",
+      price: 18500,
+      height: "140-154 см.",
+      images: [placeholderSVG],
+      available: false
+    },
+    {
+      id: 5,
+      name: "Купальник 'Феникс'",
+      category: "acrobatics",
+      price: 16500,
+      height: "от 155 см.",
+      images: [placeholderSVG],
+      available: true
+    }
+  ];
 
   const filteredSuits = suits.filter(suit => {
     if (activeFilter === 'all') return true;
@@ -91,46 +87,17 @@ function ReadySuits() {
       
       const heightRange = activeFilter.split('-')[1];
       switch (heightRange) {
-        case '124':
-          return suit.height === 'до 124 см.';
-        case '129':
-          return suit.height === '125-129 см.';
-        case '139':
-          return suit.height === '130-139 см.';
-        case '154':
-          return suit.height === '140-154 см.';
-        case '155':
-          return suit.height === 'от 155 см.';
-        default:
-          return false;
+        case '124': return suit.height === 'до 124 см.';
+        case '129': return suit.height === '125-129 см.';
+        case '139': return suit.height === '130-139 см.';
+        case '154': return suit.height === '140-154 см.';
+        case '155': return suit.height === 'от 155 см.';
+        default: return false;
       }
     }
     
     return false;
   });
-
-  const EmptyState = () => (
-    <div className="empty-state">
-      <div className="empty-state-content">
-        <p className="empty-state-text">
-          К сожалению, по вашим критериям не найдено ни одного подходящего купальника. 
-          Но не стоит расстраиваться! Мы с радостью изготовим для вас идеальный купальник 
-          по индивидуальному заказу в кратчайшие сроки. Свяжитесь с нами для консультации 
-          и обсуждения деталей.
-        </p>
-        <div className="empty-state-buttons">
-          <button className="hero-button primary">
-            <MessageCircle size={20} />
-            Получить консультацию
-          </button>
-          <button className="hero-button secondary">
-            <Phone size={20} />
-            Оформить заказ
-          </button>
-        </div>
-      </div>
-    </div>
-  );
 
   return (
     <section ref={sectionRef} id="our-works" className="ready-suits-section">
@@ -139,94 +106,8 @@ function ReadySuits() {
           padding: 6rem 0;
           background: var(--color-secondary);
           color: var(--color-white);
-          min-height: 100vh;
         }
 
-        .empty-state {
-          padding: 3rem 1rem;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          min-height: 400px;
-        }
-
-        .empty-state-content {
-          max-width: 600px;
-          text-align: center;
-          background: rgba(255, 255, 255, 0.05);
-          padding: 3rem;
-          border-radius: 20px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .empty-state-text {
-          color: #ccc;
-          font-size: 1.1rem;
-          line-height: 1.6;
-          margin-bottom: 2rem;
-        }
-
-        .empty-state-buttons {
-          display: flex;
-          gap: 1rem;
-          justify-content: center;
-        }
-
-        .hero-button {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          padding: 1rem 2rem;
-          border-radius: 50px;
-          font-size: 1rem;
-          font-weight: 500;
-          transition: all 0.3s ease;
-          cursor: pointer;
-        }
-
-        .hero-button.primary {
-          background: var(--color-primary);
-          color: #fff;
-          border: none;
-        }
-
-        .hero-button.primary:hover {
-          background: var(--color-accent);
-          transform: translateY(-2px);
-        }
-
-        .hero-button.secondary {
-          background: transparent;
-          color: #fff;
-          border: 2px solid rgba(255, 255, 255, 0.5);
-        }
-
-        .hero-button.secondary:hover {
-          border-color: #fff;
-          transform: translateY(-2px);
-        }
-
-        @media (max-width: 768px) {
-          .empty-state {
-            padding: 2rem 1rem;
-          }
-
-          .empty-state-content {
-            padding: 2rem 1.5rem;
-          }
-
-          .empty-state-buttons {
-            flex-direction: column;
-          }
-
-          .hero-button {
-            width: 100%;
-            justify-content: center;
-          }
-        }
-
-        /* Остальные стили компонента остаются без изменений */
-        
         .section-header {
           text-align: center;
           margin-bottom: 4rem;
@@ -279,9 +160,11 @@ function ReadySuits() {
 
         .suits-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-          gap: 2rem;
+          grid-template-columns: repeat(5, 1fr);
+          gap: 1.5rem;
           padding: 0 2rem;
+          max-width: 1800px;
+          margin: 0 auto;
         }
 
         .suit-card {
@@ -312,6 +195,7 @@ function ReadySuits() {
           height: 100%;
           object-fit: cover;
           transition: transform 0.5s ease;
+          background: #262626;
         }
 
         .suit-card:hover .suit-image {
@@ -379,43 +263,23 @@ function ReadySuits() {
         }
 
         .suit-content {
-          padding: 1.5rem;
+          padding: 1rem;
           background: #1a1a1a;
           color: #fff;
-          height: 245px;
-          display: flex;
-          flex-direction: column;
         }
         
-        .suit-info {
-          flex-grow: 1;
-        }
-
         .suit-title {
-          font-size: 1.25rem;
+          font-size: 1.2rem;
           color: #fff;
-          margin-bottom: 0.5rem;
+          margin-bottom: 0.75rem;
           font-weight: 600;
-        }
-
-        .suit-description {
-          color: #ccc;
-          margin-bottom: 1rem;
-          font-size: 0.95rem;
-          line-height: 1.5;
-          height: 3rem;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          display: -webkit-box;
-          -webkit-line-clamp: 2;
-          -webkit-box-orient: vertical;
         }
 
         .suit-details {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 1.5rem;
+          margin-bottom: 1rem;
         }
 
         .suit-details.sold {
@@ -471,19 +335,33 @@ function ReadySuits() {
           color: #1a1a1a;
         }
 
+        @media (max-width: 1600px) {
+          .suits-grid {
+            grid-template-columns: repeat(4, 1fr);
+          }
+        }
+
+        @media (max-width: 1200px) {
+          .suits-grid {
+            grid-template-columns: repeat(3, 1fr);
+          }
+        }
+
+        @media (max-width: 992px) {
+          .suits-grid {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+
         @media (max-width: 768px) {
           .ready-suits-section {
             padding: 4rem 0;
           }
 
           .suits-grid {
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: 1fr;
             padding: 0 1rem;
             gap: 1.5rem;
-          }
-
-          .suit-content {
-            padding: 1rem;
           }
         }
       `}</style>
@@ -516,64 +394,61 @@ function ReadySuits() {
         </select>
       </div>
 
-      {filteredSuits.length > 0 ? (
-        <div className="suits-grid">
-          {filteredSuits.map(suit => (
-            <article key={suit.id} className="suit-card">
-              <div className="suit-image-container">
-                <div className="tags-container">
-                  {suit.tags && suit.tags.map((tag, index) => (
-                    <span key={index} className="tag">{tag}</span>
-                  ))}
-                  {!suit.available && (
-                    <span className="tag sold">Продано</span>
-                  )}
-                </div>
-                <img 
-                  src={suit.images[0]} 
-                  alt={suit.name}
-                  className="suit-image"
-                />
-                <div className="suit-overlay">
-                  <button className="quick-view-btn">
-                    <Eye size={18} />
-                    Быстрый просмотр
-                  </button>
-                </div>
-              </div>
-
-              <div className="suit-content">
-                <div className="suit-info">
-                  <h3 className="suit-title">{suit.name}</h3>
-                  <p className="suit-description">{suit.description}</p>
-                  <div className={`suit-details ${!suit.available ? 'sold' : ''}`}>
-                    <span className="suit-size">Рост: {suit.height}</span>
-                    {suit.available && (
-                      <span className="suit-price">
-                        {suit.price.toLocaleString('ru-RU')} ₽
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {suit.available ? (
-                  <button className="suit-action-btn buy-btn">
-                    <ShoppingBag size={18} />
-                    Купить
-                  </button>
-                ) : (
-                  <button className="suit-action-btn order-btn">
-                    <ShoppingBag size={18} />
-                    Заказать
-                  </button>
+      <div className="suits-grid">
+        {filteredSuits.map(suit => (
+          <article key={suit.id} className="suit-card">
+            <div className="suit-image-container">
+              <div className="tags-container">
+                {suit.tags && suit.tags.map((tag, index) => (
+                  <span key={index} className="tag">{tag}</span>
+                ))}
+                {!suit.available && (
+                  <span className="tag sold">Продано</span>
                 )}
               </div>
-            </article>
-          ))}
-        </div>
-      ) : (
-        <EmptyState />
-      )}
+              <img 
+                src={suit.images[0]} 
+                alt={suit.name}
+                className="suit-image"
+                loading="lazy"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = placeholderSVG;
+                }}
+              />
+              <div className="suit-overlay">
+                <button className="quick-view-btn">
+                  <Eye size={18} />
+                  Быстрый просмотр
+                </button>
+              </div>
+            </div>
+
+            <div className="suit-content">
+              <h3 className="suit-title">{suit.name}</h3>
+              <div className={`suit-details ${!suit.available ? 'sold' : ''}`}>
+                <span className="suit-size">Рост: {suit.height}</span>
+                {suit.available && (
+                  <span className="suit-price">
+                    {suit.price.toLocaleString('ru-RU')} ₽
+                  </span>
+                )}
+              </div>
+              {suit.available ? (
+                <button className="suit-action-btn buy-btn">
+                  <ShoppingBag size={18} />
+                  Купить
+                </button>
+              ) : (
+                <button className="suit-action-btn order-btn">
+                  <ShoppingBag size={18} />
+                  Заказать
+                </button>
+              )}
+            </div>
+          </article>
+        ))}
+      </div>
     </section>
   );
 }
